@@ -126,6 +126,9 @@ authHTTPExclude:
 authJWTJWKS:
 # name of the claim that contains permissions.
 authJWTClaimKey: mediamtx_permissions
+# Actions to exclude from JWT-based authentication.
+# Format is the same as the one of user permissions.
+authJWTExclude: []
 
 ###############################################
 # Global settings -> Control API
@@ -464,7 +467,7 @@ pathDefaults:
   # Path of recording segments.
   # Extension is added automatically.
   # Available variables are %path (path name), %Y %m %d (year, month, day),
-  # %H %M %S (hours, minutes, seconds), %f (milliseconds), %s (unix epoch).
+  # %H %M %S (hours, minutes, seconds), %f (microseconds), %s (unix epoch).
   recordPath: ./recordings/%path/%Y-%m-%d_%H-%M-%S-%f
   # Format of recorded segments.
   # Available formats are "fmp4" (fragmented MP4) and "mpegts" (MPEG-TS).

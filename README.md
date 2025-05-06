@@ -157,6 +157,7 @@ _rtsp-simple-server_ has been rebranded as _MediaMTX_. The reason is pretty obvi
   * [Custom libcamera](#custom-libcamera)
   * [Cross compile](#cross-compile)
   * [Compile for all supported platforms](#compile-for-all-supported-platforms)
+  * [Docker image](#docker-image-1)
 * [License](#license)
 * [Specifications](#specifications)
 * [Related projects](#related-projects)
@@ -895,7 +896,23 @@ paths:
 
 The resulting stream is available in path `/mypath`.
 
-Known clients that can publish with WebRTC and WHIP are [FFmpeg](#ffmpeg) and [GStreamer](#gstreamer).
+If the listening IP is a multicast IP, _MediaMTX_ listens for incoming multicast packets on all network interfaces. It is possible to listen on a single interface only by using the `interface` parameter:
+
+```yml
+paths:
+  mypath:
+    source: udp://238.0.0.1:1234?interface=eth0
+```
+
+It is possible to restrict who can send packets by using the `source` parameter:
+
+```yml
+paths:
+  mypath:
+    source: udp://0.0.0.0:1234?source=192.168.3.5
+```
+
+Known clients that can publish with UDP/MPEG-TS are [FFmpeg](#ffmpeg) and [GStreamer](#gstreamer).
 
 ## Read from the server
 
@@ -1601,7 +1618,7 @@ pathDefaults:
   # Path of recording segments.
   # Extension is added automatically.
   # Available variables are %path (path name), %Y %m %d (year, month, day),
-  # %H %M %S (hours, minutes, seconds), %f (milliseconds), %s (unix epoch).
+  # %H %M %S (hours, minutes, seconds), %f (microseconds), %s (unix epoch).
   recordPath: ./recordings/%path/%Y-%m-%d_%H-%M-%S-%f
 ```
 
@@ -2557,6 +2574,24 @@ make binaries
 ```
 
 The command will produce tarballs in folder `binaries/`.
+
+### Docker image
+
+The official Docker image can be recompiled by following these steps:
+
+1. Build binaries for all supported platforms:
+
+   ```sh
+   make binaries
+   ```
+
+2. Build the image by using one of the Dockerfiles inside the `docker/` folder:
+
+   ```
+   docker build . -f docker/standard.Dockerfile -t my-mediamtx
+   ```
+
+   A Dockerfile is available for each image variant (`standard.Dockerfile`, `ffmpeg.Dockerfile`, `rpi.Dockerfile`, `ffmpeg-rpi.Dockerfile`).
 
 ## License
 
